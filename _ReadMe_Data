@@ -1,0 +1,22 @@
+_ReadMe_Data
+
+This is a file describing the contents of the Toward_Quantitative_Metabarcoding repository which is associated with the analyses in the "Toward Quantitative Metabarcoding" manuscript by Shelton et al.  This repository contains all of the raw data and scripts used to conduct the analyses in the manuscript.
+
+This read me describes the data files used in the analyses. The folder "data" contains subfolders for data used by the varied R scripts and using in the estimation scripts. Each folder contains the data for the three analyses used in the main text of the manuscript:
+
+# Data Folder
+
+## Gold_Ocean
+/data/Gold_Ocean/mifish_mock_community_data_North_Ocean.RDS - This RDS file contains the observed sequence reads for the North and Ocean mock communities.
+
+## Hanfling2016
+/data/Hanfling/Hanfling_12s_mock.csv - Provides the observed sequence data for the British Lakes data used in Figure 1. (12S derived data)
+/data/Hanfling/Mock_cytB.csv - Provides the observed sequence data for the British Lakes data. (Cytochrome B derived data)
+
+## KW_diet
+/data/kw_diet/KWfecal_techrep_reads_allspecies.csv - contains the observed sequences for individual fecal samples from individual killer whales.
+/data/kw_diet/Quantmeta_species_model_mock.csv - contains the observed sequence reads for each of the mock communities.
+/data/kw_diet/Quantmeta_species_model_true_mock_prop.csv - contains the true proportional composition of each species in mock communities.
+
+## summarized_data
+This folder contains output from the models estimated by the scripts contained in the code folder.  The model output files can be very large and they are not included in this repository.

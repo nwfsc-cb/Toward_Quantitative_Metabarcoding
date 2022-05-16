@@ -1,0 +1,64 @@
+_ReadMe
+
+This is a file describing the contents of the Toward_Quantitative_Metabarcoding repository which is associated with the analyses in the "Toward Quantitative Metabarcoding" manuscript by Shelton et al.  This repository contains all of the raw data and scripts used to conduct the analyses in the manuscript.
+
+The file structure is fairly straight forward. The folder "code" contains subfolders for R scripts that are used to read in and manipulate metabarcoding data.  Each folder contains the scripts needed to analyze each dataset:
+
+# Code Folder
+
+## Core_Stan_models
+
+/code/Core_Stan_models - This folder contains the four distinct Stan estimation code files needed to estimate the statistical model.  These scripts are called by the various estimation files in the simulation and data folders below.
+
+/code/Core_Stan_models/quant_metabar_multinom.stan - Provides the full model with amplification bias estimation and overdispersion from the multinomial model.
+
+/code/Core_Stan_models/quant_metabar_no_overdispersion.stan - Provides the full model with amplification bias but no overdispersion (multinomial observations).
+
+/code/Core_Stan_models/quant_metabar_no_mock_no_alpha.stan - Provides a model without amplification bias estimation but does include overdispersion for the multinomial observations.
+
+/code/Core_Stan_models/quant_metabar_no_overdispersion_no_alpha.stan - Provides a model without amplification bias and no overdispersion (multinomial observations).
+
+## Simulating Metabarcoding data.
+
+/code/Simulating_data includes six scripts to simulate and analyze simulated data using the statistical models.
+
+/code/Simulating_data/Metabarcoding_simulation.R - This is the base script that defines the number of species, sites, number of technical replicates, etc., calls the simulation script, and the calls the appropriate estimation model.
+
+/code/Simulating_data/quant_metabar_sim.R - is the workhorse simulation file that creates data of the proper form.
+
+/code/Simulating_data/Metabarcoding_make_design_files.R - this makes design files that are used in the model estimation files.
+
+These three files esitimate the model in different ways, either through optimization or through full MCMC in Stan:
+/code/Simulating_data/Metabarcoding_optimizing.R
+/code/Simulating_data/Metabarcoding_optimizing_cmdstanr.R
+/code/Simulating_data/Metabarcoding_bayesian.R
+
+## Analyses of British Lakes (Hanfling et al. 2016)
+
+/code/Hanfling2016 includes three scripts to read in and analyze data from the Hanfling et al. 2016 paper on fish communities in British Lakes.
+
+/code/Hanfling2016/Hanfling_estimation_even.R - runs Bayesian estimation of the Hanfling dataset (Cytochrome B) using the even numbered samples as mock communities and predicting the true composition of odd numbered communities
+
+/code/Hanfling2016/Hanfling_estimation_odd.R - runs Bayesian estimation of the Hanfling dataset (Cytochrome B) using the odd numbered samples as mock communities and predicting the true composition of even numbered communities.
+
+/code/Hanfling2016/Hanfling_estimation_no_calibration.R - runs Bayesian estimation of the Hanfling dataset (Cytochrome B) using all of the samples but does not attempt to include amplification bias for each species.
+
+## Analyses of Pacific ocean fish communities.
+
+/code/Gold_Ocean includes two scripts to read in and analyze data from two mock communities of fish from Pacific ocean fish.
+
+/code/Gold_Ocean/Ocean_estimation_mock2.R - This file estimates the full amplification bias model for both the "North" and "Ocean" communities.  The "even" communities (where all species have equivalent starting concentrations) are used as mock communities and the two skew communities for North and the two skew communities for Ocean are predicted.
+
+/code/Gold_Ocean/Ocean_estimation_raw.R - This file estimates a model without  model for both the "North" and "Ocean" communities.  All of the communities are included during model estimation.
+
+## Analyses of Southern Resident Killer Whale Diet
+
+/code/SRKW_diet includes two scripts to read in and analyze data from .
+
+/code/SRKW_diet/SRKW_diet_fullmod.R- This file estimates the full amplification bias model for all SRKW diet samples. There are two mock communities included as known composition samples and the remaining communities are treated as being of unknown composition.
+
+/code/Gold_Ocean/Ocean_estimation_raw.R - This file estimates a model without amplification bias for all SRKW diet samples. There are two mock communities included as being of unknown composition. The remaining communities are also treated as being of unknown composition.
+
+## Plotting model output and generating figures.
+
+/code/combine_analyses The four scripts in this folder extract the model fits and generate the figures used in the main text of the manuscript.

@@ -1,0 +1,9 @@
+type_samp,community,pcr_cycles,tech_rep,miseq_run,year,sample_id,Oncorhynchus tshawytscha,Oncorhynchus keta,Oncorhynchus kisutch,Orcinus orca,Atheresthes stomias,Anoplopoma fimbria,Hippoglossus stenolepis,Ophiodon elongatus,Oncorhynchus mykiss,Salmo salar,Oncorhynchus nerka,Oncorhynchus gorbuscha,Clupea pallasii,Squalus acanthias,Zaprora silenus,Gadus chalcogrammus,Liparis sp.,Microstomus pacificus,Eumicrotremus orbis,Citharichthys sordidus,Ammodytes hexapterus,Merluccius productus,Enophrys bison,Citharichthys stigmaeus,Hippoglossoides elassodon,Isopsetta isolepis,Parophrys vetulus,Liparis florae,Anarrhichthys ocellatus,Cymatogaster aggregata,Leuroglossus schmidti,Artedius harringtoni,Hexagrammos decagrammus,Hydrolagus colliei,Thaleichthys pacificus,Diaphus theta,Osmeridae sp.,Ronquilus jordani,Sebastes flavidus,Gasterosteus aculeatus,Liparis pulchellus
+mock,1,32,1,2021,2021,control2_S35,0.15,0,0,0,0,0,0.4,0.4,0,0,0,0,0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+mock,1,32,2,2021,2021,control2_S73,0.15,0,0,0,0,0,0.4,0.4,0,0,0,0,0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+mock,2,32,1,2021,2021,control3_S36,0.2,0.2,0.1,0,0,0,0,0,0.1,0.2,0.1,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+mock,2,32,2,2021,2021,control3_S74,0.2,0.2,0.1,0,0,0,0,0,0.1,0.2,0.1,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+mock,1,32,1,2019,2019,PreyControlMix-2_S20,0.15,0,0,0,0,0,0.4,0.4,0,0,0,0,0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+mock,1,32,2,2019,2019,PreyControlMix-2b_S65,0.15,0,0,0,0,0,0.4,0.4,0,0,0,0,0.05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+mock,2,32,1,2019,2019,PreyControlMix-3_S32,0.2,0.2,0.1,0,0,0,0,0,0.1,0.2,0.1,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+mock,2,32,2,2019,2019,PreyControlMix-3b_S75,0.2,0.2,0.1,0,0,0,0,0,0.1,0.2,0.1,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
