@@ -1,7 +1,7 @@
 # Make figure comparing true and raw observed for three data sets
 # hanfling
-# Ocean fish data
-# KW diet data
+# Zack ocean data
+# KW diet from Amy.
 
 library(tidyverse)
 library(grid)
@@ -9,11 +9,11 @@ library(gridExtra)
 library(cowplot)
 library(ggsci)
 
-load("./data/summarized_data/Fish_Oceanic_and_North_mock_2_crossValidate_Skew.Rdata")
+load("./data/summarized_data/Fish_Oceanic_crossValidate_Skew.Rdata")
 fish.dat <- Output
-load("./data/summarized_data/kw_diet_output_fullmodel.Rdata")
+load("./data/summarized_data/kw_diet_output.Rdata")
 orca.dat <- orca_poo
-lake.dat <- read.csv("./data/Hanfling2016/Hanfling_12s_mock.csv")
+lake.dat <- read.csv("./data/summarized_data/Hanfling_12s_mock.csv")
 
 ########################################
 ##### These are the components of Figure 1 - version 1. highlight by species.
@@ -105,10 +105,10 @@ lake.dat <- read.csv("./data/Hanfling2016/Hanfling_12s_mock.csv")
   
  
 ###########################################3
-##### OK.  Repeat for Ocean fish data.
+##### OK.  Repeat for Zack's data.
 ###########################################3
 
- ocean.dat <- fish.dat$ocean_dat %>% group_by(community,tech_rep,Cycles) %>% 
+ ocean.dat <- fish.dat$zack %>% group_by(community,tech_rep,Cycles) %>% 
                   mutate(tot_conc = sum(start_conc_ng),
                          tot_Reads = sum(nReads)) %>%
                   mutate(true_prop = start_conc_ng/tot_conc,
@@ -173,17 +173,11 @@ lake.dat <- read.csv("./data/Hanfling2016/Hanfling_12s_mock.csv")
 ###### Repeat for Killer Whale Poop data.
 #############################################  
   
-  kw.dat <- orca.dat$dat.long.trim %>% filter(type_samp =="mock", true_prop>0) %>%
-    rename(Species=sp) %>% mutate(log_obs_true = log(est_prop)-log(true_prop))
+  kw.dat <- orca.dat$orca.dat.long %>% filter(type_samp =="mock", true_prop>0) %>%
+    rename(Species=sp)
   
-  kw.dat.m <- kw.dat %>% mutate(log_obs_true = log(est_prop)-log(true_prop)) %>% 
-    group_by(community,Species,true_prop) %>% 
-    summarise(mean_est_prop=mean(est_prop),
-              min_est = min(est_prop),
-              max_est=max(est_prop),
-              mean_log_obs_true=mean(log_obs_true),
-              min_log_obs_true = min(log_obs_true),
-              max_log_obs_true = max(log_obs_true)) 
+  kw.dat.m <- orca.dat$orca.dat.long.summ %>% filter(type_samp =="mock", true_prop>0) %>%
+              rename(Species=sp)
   
   kw.dat <- kw.dat %>% mutate(sp.new = "Other") %>%
     mutate(sp.new = ifelse(Species=="Oncorhynchus.mykiss","O. mykiss",sp.new)) %>%
@@ -245,7 +239,7 @@ lake.dat <- read.csv("./data/Hanfling2016/Hanfling_12s_mock.csv")
                c(4,5,6),
                c(7,8,9))
 
-  quartz(file="./plots/Mock_plot.pdf",type="pdf",dpi=600,height=8,width=7)  
+  quartz(file="Mock_plot.pdf",type="pdf",dpi=600,height=8,width=7)  
     mock_plot <- grid.arrange(layout_matrix= lay,
                widths=c(1,1,0.4),
                lakes.p1b + theme(legend.position = "none")+ labs(subtitle="A",hjust=0,vjust=-1), 
@@ -270,7 +264,7 @@ lake.dat <- read.csv("./data/Hanfling2016/Hanfling_12s_mock.csv")
   
   lake.comm <- "MC06"
   ocean.comm <- "Skew_Oceanic_2_39"
-  ocean.comm.lab <- "Oceanic (Skew 2)"
+  ocean.comm.lab <- "Ocean (Skew 2)"
   kw.comm <- 2
   kw.comm.lab <- "Salmonids"
   
@@ -485,7 +479,7 @@ spaceLegend =0.1
          legend.key.size = unit(spaceLegend, "lines"))
  
   
-  quartz(file="./plots/Mock_plot_v2.pdf",type="pdf",dpi=600,height=9,width=7)  
+  quartz(file="Mock_plot_v2.pdf",type="pdf",dpi=600,height=9,width=7)  
   mock_plot_2 <- grid.arrange(layout_matrix= lay,
                             widths=c(1,1,0.4),
                             lakes.p1c + mod.leg + labs(subtitle="A",hjust=0),
@@ -499,5 +493,70 @@ spaceLegend =0.1
                             get_legend(kw.p1.stack+ mod.leg2) 
   )
   dev.off()
-
   
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  geom_point(data=dat.m %>% filter(type_samp=="mock",true_prop>0),
+             aes(x=true_prop,y=mean_log_obs_true,color=sp,fill=sp,shape=as.factor(community)),alpha=1,size=2) + 
+    
+
+
+
+
+ggplot(dat.long %>% filter(type_samp=="mock",true_prop>0)) +
+  #geom_point(aes(x=true_prop,y=est_prop,color=sp,shape=as.factor(community)),fill="white",alpha=0.5) + 
+  geom_point(data=dat.m %>% filter(type_samp=="mock",true_prop>0),
+             aes(x=true_prop,y=mean_est_prop,color=sp,fill=sp,shape=as.factor(community)),alpha=1,size=2) + 
+  geom_errorbar(data=dat.m %>% filter(type_samp=="mock",true_prop>0),
+                aes(x=true_prop,ymin=min_est,ymax=max_est,color=sp),alpha=0.5,width=0) + 
+  geom_abline(intercept=0,slope=1,color="red",linetype="dashed") +
+  scale_color_viridis_d("Species",begin=0,end=0.9,option = "plasma") +
+  scale_fill_viridis_d("Species",begin=0,end=0.9,option = "plasma") +
+  scale_shape_manual("Community",values=c(21,22)) +
+  scale_x_continuous("True Proportion",limits = c(0,0.42),expand=c(0,0)) +
+  scale_y_continuous("Estimated Proportion",limits = c(0,0.45),expand=c(0,0)) +
+  #facet_wrap(~community) +
+  theme_bw()
+
+## Log-ratio of observed-predicted for mock communities.
+
+
+ggplot(dat.long %>% filter(type_samp=="mock",true_prop>0)) +
+  #geom_point(aes(y=log_obs_true,x=true_prop,,color=sp,fill=sp,shape=as.factor(community)),alpha=1,size=1,fill="white") +
+  geom_point(data=dat.m %>% filter(type_samp=="mock",true_prop>0),
+             aes(x=true_prop,y=mean_log_obs_true,color=sp,fill=sp,shape=as.factor(community)),alpha=1,size=2) + 
+  geom_errorbar(data=dat.m %>% filter(type_samp=="mock",true_prop>0),
+                aes(x=true_prop,ymin=min_log_obs_true,ymax=max_log_obs_true,color=sp),alpha=0.5,width=0) +
+  geom_abline(intercept=0,slope=0,color="red",linetype="dashed") +
+  scale_color_viridis_d("Species",begin=0,end=0.75,option = "plasma") +
+  scale_fill_viridis_d("Species",begin=0,end=0.75,option = "plasma") +
+  scale_shape_manual("Community",values=c(21,22)) +
+  scale_x_continuous("True Proportion",limits = c(0,0.42),expand=c(0,0)) +
+  scale_y_continuous("Fold error") + #,limits = c(0,0.45),expand=c(0,0)) +
+  #facet_wrap(~community) +
+  theme_bw()
+
+
+
