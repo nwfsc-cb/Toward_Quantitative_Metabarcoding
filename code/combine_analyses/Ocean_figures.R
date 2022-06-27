@@ -8,11 +8,17 @@ library(robCompositions)
 # Read in the posteriors for the 
 load("./data/summarized_data/Fish_Oceanic_and_North_Raw.Rdata")
 raw <- Output
+load("./data/summarized_data/Fish_Oceanic_and_North_mock_1_crossValidate_Skew.Rdata")
+mock1 <- Output # This is the cross validation that uses all of the even communities
 load("./data/summarized_data/Fish_Oceanic_and_North_mock_2_crossValidate_Skew.Rdata")
 mock2 <- Output # This is the cross validation that uses only the 39 cycle even communities
+load("./data/summarized_data/Fish_Oceanic_and_North_VAR_PCR_crossValidate_Skew.Rdata")
+var_pcr <- Output
 
-# raw - no amplification adjustment.
+# mock1 - many tau, all even communities
 # mock2 - many tau, single 39 cycle even communities
+# mock3 - single tau, all even communities
+# mock4 - single tau, single 39 cycle even communities
 
 #########################################################
 # Raw estimates from Reads
@@ -47,6 +53,38 @@ raw.post <-expand.grid(comm_idx = COM$comm_idx,sp_idx =SP$sp_idx) %>%
 # Combine the raw estimates and posterior estimates
 raw.all <- full_join(raw.raw,raw.post)
 
+#########################################################
+# Mock1
+#########################################################
+# summarize raw estimates from reads for each species.
+mock1.raw <- mock1$env %>% group_by(community,Cycles,tech_rep) %>%
+      mutate(sum.ng = sum(start_conc_ng),
+             true.prop = start_conc_ng / sum.ng) %>%
+      ungroup() %>%
+      group_by(Species,community,Cycles,true.prop) %>%
+  summarise(simple.Mean=mean(propReads),
+            simple.N = length(tech_rep)) %>%
+  replace_na(list(raw.Mean=0,raw.SD=0,raw.SE=0))
+
+# extract predicted proportions from the posterior
+COM <- data.frame(community = levels(mock1$env$community %>% as.factor()))
+COM$comm_idx <- 1:nrow(COM)
+SP  <- mock1$env %>% distinct(Species,sp_idx) %>% as.data.frame()
+
+# These are the predicted intercepts for the posteriors
+beta_posterior <- mock1$stanMod_summary[["int_samp_small"]][, c(1,4:8)]
+colnames(beta_posterior) <- paste0("mock1.",substr(colnames(beta_posterior),1,nchar(colnames(beta_posterior))-1))
+colnames(beta_posterior)[1] <- "mock1.mean"
+beta_posterior <- as.data.frame(beta_posterior)
+
+mock1.post <-expand.grid(comm_idx = COM$comm_idx,sp_idx =SP$sp_idx) %>% 
+    arrange(comm_idx,sp_idx) %>% 
+    left_join(.,COM) %>% 
+    left_join(.,SP) %>% 
+    bind_cols(.,beta_posterior)
+
+# Combine the raw estimates and posterior estimates
+mock1.all <- full_join(mock1.raw,mock1.post)
 
 #########################################################
 # Mock2
@@ -81,6 +119,39 @@ mock2.post <-expand.grid(comm_idx = COM$comm_idx,sp_idx =SP$sp_idx) %>%
 # Combine the raw estimates and posterior estimates
 mock2.all <- full_join(mock2.raw,mock2.post)
 
+#########################################################
+# VAR PCR
+#########################################################
+# summarize raw estimates from reads for each species.
+pcr.raw <- var_pcr$env %>% group_by(community,Cycles,tech_rep) %>%
+  mutate(sum.ng = sum(start_conc_ng),
+         true.prop = start_conc_ng / sum.ng) %>%
+  ungroup() %>%
+  group_by(Species,community,Cycles,true.prop) %>%
+  summarise(simple.Mean=mean(propReads),
+            simple.N = length(tech_rep)) %>%
+  replace_na(list(raw.Mean=0,raw.SD=0,raw.SE=0))
+
+# extract predicted proportions from the posterior
+COM <- data.frame(community = levels(var_pcr$env$community %>% as.factor()))
+COM$comm_idx <- 1:nrow(COM)
+SP  <- var_pcr$env %>% distinct(Species,sp_idx) %>% as.data.frame()
+
+# These are the predicted intercepts for the posteriors
+beta_posterior <- var_pcr$stanMod_summary[["int_samp_small"]][, c(1,4:8)] 
+colnames(beta_posterior) <- paste0("pcr.",substr(colnames(beta_posterior),1,nchar(colnames(beta_posterior))-1))
+colnames(beta_posterior)[1] <- "pcr.mean"
+
+beta_posterior <- as.data.frame(beta_posterior)
+
+pcr.post <-expand.grid(comm_idx = COM$comm_idx,sp_idx =SP$sp_idx) %>% 
+  arrange(comm_idx,sp_idx) %>% 
+  left_join(.,COM) %>% 
+  left_join(.,SP) %>% 
+  bind_cols(.,beta_posterior)
+
+# Combine the raw estimates and posterior estimates
+pcr.all <- full_join(pcr.raw,pcr.post)
 
 ########################################################################
 ########################################################################
@@ -88,7 +159,11 @@ mock2.all <- full_join(mock2.raw,mock2.post)
 ########################################################################
 
 # Combine mock and pcr_var results with raw reads.
-result.dat <- left_join(mock2.all,raw.all %>% dplyr::select(-comm_idx,-sp_idx))                        
+result.dat <- left_join(mock1.all,mock2.all) %>%
+              left_join(.,
+                        pcr.all %>% dplyr::select(-comm_idx,-sp_idx)) %>%
+              left_join(.,
+                        raw.all %>% dplyr::select(-comm_idx,-sp_idx))
 
 # make a distinct factor for large true proportions and for small true proportions
 result.dat <- result.dat %>% mutate(true.cat= ifelse(true.prop>0.1,"big","small"))
@@ -105,6 +180,8 @@ result.dat <- result.dat %>% mutate(manual.col = "white",
                                                         pal_jco(palette = c("default"), alpha = 1)(10)[c(8)],
                                                         manual.col)
                                     )
+
+
 
 # pull out just ocean.skew.dat for plotting.
 spread=0.15
@@ -405,9 +482,9 @@ p_AD_ocean
 #### Pull out estimates of alpha, convert to CLR
 ###############################################################333
 
-p_space_mock1 <- (exp(mock1$pars$alpha) / rowSums(exp(mock1$pars$alpha))) %>% as.data.frame()
-clr_alpha_list_mock1 <- cenLR(p_space_mock1)
-clr_alpha <- clr_alpha_list_mock1$x.clr %>% as.data.frame()
+p_space_mock2 <- (exp(mock2$pars$alpha) / rowSums(exp(mock2$pars$alpha))) %>% as.data.frame()
+clr_alpha_list_mock <- cenLR(p_space_mock2)
+clr_alpha <- clr_alpha_list_mock$x.clr %>% as.data.frame()
 colnames(clr_alpha) <- mock.sp$Species                       
 clr_alpha_sum <- clr_alpha %>% 
                     pivot_longer( .,
@@ -448,7 +525,7 @@ clr_alpha_sum <- clr_alpha_sum %>% mutate(manual.col = "white",
 
 
 
-p_clr_mock1 <- ggplot(clr_alpha_sum) +
+p_clr_mock2 <- ggplot(clr_alpha_sum) +
     geom_errorbarh(aes(xmin=q.25,xmax=q.75,y=SP),size=2,height=0) +
     geom_errorbarh(aes(xmin=q.025,xmax=q.975,y=SP),size=0.8,height=0) +
     geom_point(aes(x=Mean,y=SP,fill=SP,),size=3,shape=21) +
@@ -544,7 +621,7 @@ grid.arrange(ocean.skew.1 +
                annotate(geom="text",x=2.7,y=3.15,label="C"),
              p_AD_north +
                annotate(geom="text",x=0.7,y=35,label="D"),
-             p_clr_mock1 +
+             p_clr_mock2 +
                annotate(geom="text",x=-0.14,y=34,label="E"),
              widths=c(0.25,0.25,0.5),
              layout_matrix=LAY
