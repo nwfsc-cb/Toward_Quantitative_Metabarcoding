@@ -1,9 +1,11 @@
 cff-version: 1.1.0
 message: "If you use this software, please cite it as below."
 authors:
-  - family-names: Andrew
-    given-names: Shelton
-    orcid: https://orcid.org/0000-0002-8045-6141
-title: nwfsc-cb/Toward_Quantitative_Metabarcoding: Toward Quantitative Metabarcoding
-version: v.1.0.0
-date-released: 2022-05-16
+  - family-names: "Andrew"
+    given-names: "Shelton"
+    orcid: "https://orcid.org/0000-0002-8045-6141"
+title: "Toward_Quantitative_Metabarcoding"
+version: 2.0.0
+doi: 10.5281/zenodo.6555052 
+date-released: 2022-07-07
+url: "https://github.com/nwfsc-cb/Toward_Quantitative_Metabarcoding"
