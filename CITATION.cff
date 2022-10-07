@@ -1,29 +1,31 @@
-cff-version: 1.1.1
-message: "If you use this data and software, please cite it as below."
+cff-version: 1.
+message: >-
+ If you use this data and software, please cite it as below.
+type: dataset
 authors:
-  - family-names: "Shelton"
-    given-names: "Andrew Olaf"
-    orcid: "https://orcid.org/0000-0002-8045-6141"
-  - family-names: "Gold"
-    given-names: "Zachary J."
-  - family-names: "Jensen"
-    given-names: "Alexander J."
-  - family-names: "D'Agnese"
-    given-names: "Erin"
-  - family-names: "Andruszkiewicz Allan"
-    given-names: "Elizabeth"
-  - family-names: "Van Cise"
-    given-names: "Amy"
-  - family-names: "Gallego"
-    given-names: "Ramón"
-  - family-names: "Ramón-Laca"
-    given-names: "Ana"
-  - family-names: "Garber-Yonts"
-    given-names: "Maya"
-  - family-names: "Parsons"
-    given-names: "Kim"
-  - family-names: "Kelly"
-    given-names: "Ryan P."
-title: nwfsc-cb/Toward_Quantitative_Metabarcoding: Toward Quantitative Metabarcoding
-version: v.2.0.3
+  - family-names: Shelton
+    name-particle: Andrew Olaf
+    orcid: https://orcid.org/0000-0002-8045-6141
+  - name-particle: Zachary J.
+    family-names: Gold
+  - family-names: Jensen
+    name-particle: Alexander J.
+  - name-particle: Erin
+    family-names: D'Agnese
+  - name-particle: Elizabeth
+    family-names: Andruszkiewicz Allan
+  - name-particle: Amy
+    family-names: Van Cise
+  - name-particle: Ramón
+    family-names: Gallego
+  - name-particle: Ana
+    family-names: Ramón-Laca
+  - name-particle: Maya
+    family-names: Garber-Yonts
+  - name-particle: Kim
+    family-names: Parsons
+  - name-particle: Ryan P.
+    family-names: Kelly
+title: Toward Quantitative Metabarcoding
+version: v.2.0.2
 date-released: 2022-10-07
